@@ -99,12 +99,20 @@ h5 {
   
 
 }
-
+.product-image {
+    width: 300px; 
+    height: 300px;
+    aspect-ratio: 3/2;
+    object-fit: contain;
+    display:block;
+    background-size: cover;
+    background-position: center;
+  }
 .product {
   
-    height: 220px;
+    
     cursor: pointer;
-    border-radius: 30px;
+    border-radius: 40px;
     background-color: #fff;
 }
 
@@ -117,7 +125,7 @@ h5 {
 }
 
 .imagebox {
-
+    
 
     border-radius: inherit;
 }

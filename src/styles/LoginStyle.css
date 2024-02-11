@@ -5,14 +5,12 @@ body {
 
 
 .my-page {
-    overflow-y: scroll;
-    overflow-x: hidden;
+    
     
     background: linear-gradient(#fafafe, #fff);
     margin: auto;
     display: flex;
     flex-direction: column;
-    border-radius: 40px;
     box-shadow: 0 10px 15px 0 rgba(0, 0, 0, .1);
 }
 
@@ -64,7 +62,9 @@ body {
 .bottomtext>a:hover {
     color: #171717;
 }
-
+.Mui-selected {
+    color: #f79da5 !important;
+  }
 
 .navbar {
     border-radius: 30px;

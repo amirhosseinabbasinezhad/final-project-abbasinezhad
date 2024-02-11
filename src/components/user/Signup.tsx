@@ -3,15 +3,16 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from "next/link";
 import { useRef, useState, useEffect } from 'react';
-import { addUser, checkAvailable, userstates } from '../store/userSlice';
+import { registerUser,  userState } from '../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { useAppDispatch } from '../store';
 const Signup: React.FC = () => {
-    const emailIsAvailable = useSelector(userstates)
-    const dispatch = useDispatch()
+    const emailIsAvailable = useSelector(userState)
+    const dispatch = useAppDispatch()
     const [signupErrors, setSignupErrors] = useState<string[]>([]);
     const router = useRouter();
-    const user = useSelector(userstates);
+    const user = useSelector(userState);
     useEffect(() => {
         if (user.authState === true) {
             router.push(`/user/${user.userInfo.email}`);
@@ -50,12 +51,13 @@ const Signup: React.FC = () => {
 
             //checkAvailable(dispatch, email);
             if (/*emailIsAvailable.emailavailable*/true === true) {
-                addUser(dispatch, name, email, password);
+                dispatch(registerUser( name, email, password))
+                
                 setTimeout(() => {
                     if (user.authState === false) {
                         setSignupErrors((signupErrors) => [...signupErrors, "sign up failed"]);
                     }
-                }, 5000);
+                }, 15000);
 
             }
             else {

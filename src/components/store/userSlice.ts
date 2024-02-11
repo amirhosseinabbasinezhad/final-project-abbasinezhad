@@ -1,264 +1,123 @@
-
-import { AnyAction, createSlice, Dispatch } from '@reduxjs/toolkit';
-import { AppState } from "./index"
-import { HYDRATE } from "next-redux-wrapper";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppThunk} from "./index"
 import axios from 'axios';
-export interface cartItem {
-    readonly productItem: {
-        id: number,
-        title: string,
-        price: number,
-        description: string,
-        category: {},
-        img: string,
-        categoryId: string,
+import { setToken } from '../../pages/api/token';
+import { toast } from 'react-toastify';
+
+export interface UserState {
+  authState: boolean;
+  emailAvailable: boolean | null;
+  userInfo: {
+    id: number;
+    email: string;
+    password: string;
+    name: string;
+    role: string;
+    avatar: string;
+  };
+}
+
+const initialState: UserState = {
+  authState: false,
+  emailAvailable: null,
+  userInfo: {
+    id: 0,
+    email: '',
+    password: '',
+    name: '',
+    role: '',
+    avatar: '',
+  },
+};
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    setIsAvailable(state, action: PayloadAction<{ available: boolean }>) {
+      state.emailAvailable = action.payload.available;
     },
-    readonly amount: number,
-}
-
-export interface userState {
-    authState: boolean,
-    emailavailable: boolean,
-    userInfo: {
-        id: number,
-        email: string,
-        password: string,
-        name: string,
-        role: string,
-        avatar: string,
-        
+    loginUser(state, action: PayloadAction<{ data: any }>) {
+      const { data } = action.payload;
+      state.userInfo.id = data._id;
+      state.userInfo.email = data.email;
+      state.userInfo.password = data.password;
+      state.userInfo.role = data.role;
+      state.userInfo.name = data.firstName+data.lastName;
+      state.userInfo.avatar = data.avatar;
+      state.authState = true;
+      setToken(data?.accessToken)
+      localStorage.setItem('accessToken',data?.accessToken)
+      localStorage.setItem('userId',data?._id)
+      localStorage.setItem('name',data?.firstName)
+      localStorage.setItem('email',data?.email)
     },
-    cart: {
-        items: cartItem[],
-        totalAmount: number,
-
-    }
-}
-const userState = {
-    authState: false,
-    emailavailable: null,
-    userInfo: {
-        id: 0,
-        email: "",
-        password: "",
-        name: "",
-        role: "",
-        avatar: "",
+    logoutUser(state) {
+      state.userInfo = initialState.userInfo;
+      state.authState = false;
     },
-    cart: {
-        items: [] as cartItem[],
-        totalAmount: 0,
+  },
+});
 
+export const { setIsAvailable, loginUser, logoutUser } = userSlice.actions;
+
+export const registerUser = (
+  name: string,
+  email: string,
+  password: string
+): AppThunk => async (dispatch: (arg0: { payload: { data: any; }; type: string; }) => void) => {
+  try {
+    const response = await axios.post('https://shop-api-backend-main.vercel.app/api/auth/register', {
+      firstName: name,
+      lastName: 'Doe',
+      email,
+      number: 1234567890,
+      password,
+      isAdmin: false,
+      userIP: '192.168.0.1',
+    });
+
+    if (response.status === 201) {
+      dispatch(loginUser(response));
+      
     }
-}
-export const userslice = createSlice({
-    name: "user",
-    initialState: userState,
-    reducers: {
-        isAvailable(state, action) {
+  } catch (error) {
+    console.error('Error registering user:', error);
+  }
+};
 
+export const checkEmailAvailable = (email: string): AppThunk => async (dispatch: (arg0: { payload: { available: boolean; }; type: string; }) => void) => {
+  try {
+    const response = await axios.post('https://api.escuelajs.co/api/v1/users/is-available', {
+      email,
+    });
 
-            state.emailavailable = action.payload.Available;
-        },
-        Login(state, action) {
-            console.log(action);
-            
-            state.userInfo.id = action.payload.data._id
-            state.userInfo.email = action.payload.data.email
-            state.userInfo.password = action.payload.data.password
-            state.userInfo.role = action.payload.data.role
-            state.userInfo.name = action.payload.data.name
-            state.userInfo.avatar = action.payload.data.avatar
-            state.authState = true;
-        },
-        Logout(state) {
-            state.userInfo.id = 0,
-                state.userInfo.email = "",
-                state.userInfo.password = "",
-                state.userInfo.role = "",
-                state.userInfo.name = "",
-                state.userInfo.avatar = "",
-                state.authState = false;
-        },
-        AddToCart(state, action) {
+    dispatch(setIsAvailable({ available: response.data.isAvailable }));
+  } catch (error) {
+    console.error('Error checking email availability:', error);
+  }
+};
 
-            if (state.cart.items.length > 0) {
+export const loginUserAction = (email: string, password: string): AppThunk => async (dispatch: (arg0: { payload: { data: any; }; type: string; }) => void) => {
+  try {
+    const response = await axios.post('https://shop-api-backend-main.vercel.app/api/auth/login', {
+      email,
+      password,
+    });
 
-
-                state.cart.items.map((item, index) => {
-                    if (item.productItem.id === action.payload) {
-
-                        state.cart.items[index] = { productItem: item.productItem, amount: item.amount + 1 }
-                        state.cart.totalAmount = state.cart.totalAmount + state.cart.items[index].productItem.price;
-                    }
-                })
-            }
-
-        },
-        DeletFromCart(state, action) {
-
-            if (state.cart.items.length > 0) {
-
-
-                state.cart.items.map((item, index) => {
-                    if (item.productItem.id === action.payload) {
-
-                        if (item.amount > 1) {
-                            state.cart.items[index] = { productItem: item.productItem, amount: item.amount - 1 }
-                            state.cart.totalAmount = state.cart.totalAmount - state.cart.items[index].productItem.price;
-                        }
-
-                        else if (item.amount === 1) {
-                            state.cart.totalAmount = state.cart.totalAmount - state.cart.items[index].productItem.price;
-                            const newitems = state.cart.items.splice(index, 1);
-
-                        }
-
-
-
-                    }
-                })
-            }
-
-        },
-        addProductToCart(state, action) {
-            state.cart.items = action.payload;
-        },
-        setTotalAmount(state, action) {
-            state.cart.totalAmount = action.payload;
-        }
-    },
-    extraReducers: {
-        [HYDRATE]: (state, action) => {
-            return {
-                ...state,
-                ...action.payload,
-            };
-        },
-    },
-
-})
-export const carthandler = (dispatch: Dispatch<AnyAction>,
-    productItem: {
-        id: number,
-        title: string,
-        price: number,
-        description: string,
-        category: {},
-        img: string,
-        categoryId: string,
-    },
-    prevcart: { items: cartItem[], totalAmount: number }, amount: number) => {
-    const prevItems = prevcart.items;
-    let sendItems;
-    const prevTotalAmount = prevcart.totalAmount;
-    let newTotalAmount;
-    if (prevItems.length > 0) {
-        prevItems.map((item, index) => {
-
-            if (item.productItem.id === productItem.id) {
-
-                const sendItemss: cartItem[] = [...prevItems];
-                sendItemss[index] = {
-                    productItem: productItem,
-                    amount: item.amount + amount,
-                }
-
-                dispatch(userAction.addProductToCart(sendItemss));
-            }
-            else {
-                sendItems = [...prevItems, { productItem: productItem, amount: amount }];
-                dispatch(userAction.addProductToCart(sendItems));
-            }
-            newTotalAmount = prevTotalAmount + amount * productItem.price;
-            dispatch(userAction.setTotalAmount(newTotalAmount))
-        })
-
-
-
-
-
-    } else {
-        sendItems = [{ productItem: productItem, amount: amount }]
-        dispatch(userAction.addProductToCart(sendItems));
-        newTotalAmount = 0 + amount * productItem.price;
-        dispatch(userAction.setTotalAmount(newTotalAmount))
+    if (response.status === 200) {
+      dispatch(loginUser(response));
+      console.log(response.data);
+      
+    }else{
+      toast.error("can not login !")
     }
+  } catch (error) {
+    toast.error("Error logging in user:', error")
+    
+  }
+};
 
-}
-export async function addUser(dispatch: Dispatch<AnyAction>, name: string, email: string, password: string) {
+export const userState = (state: { user: UserState }) => state.user;
 
-    try {
-
-        const response = await axios.post(`https://shop-api-backend-main.vercel.app/api/auth/register`,
-            
-                {firstName: name,
-                lastName: "Doe",
-                email: email,
-                number: 1234567890,
-                password: password, 
-                isAdmin: false,
-                userIP: "192.168.0.1"
-                
-            });
-
-
-        if (response.status === 201) {
-            LoginUser(dispatch, email, password)
-        }
-
-    } catch (error) {
-
-    }
-}
-export async function checkAvailable(dispatch: Dispatch<AnyAction>, email: string) {
-
-    try {
-
-        const response = await axios.post(`https://api.escuelajs.co/api/v1/users/is-available`,
-            { email: email });
-
-        dispatch(userAction.isAvailable({ Available: response.data.isAvailable }))
-    } catch (error) {
-
-
-    }
-
-}
-export async function LoginUser(dispatch: Dispatch<AnyAction>, email: String, password: string) {
-
-    try {
-
-        const response = await axios.post(`https://shop-api-backend-main.vercel.app/api/auth/login`,
-            {
-                email: email,
-                password: password,
-            }
-        );
-
-
-        if (response.status === 200) {
-            dispatch(userAction.Login(response))
-            //const profileresponse = await axios.get(`https://api.escuelajs.co/api/v1/auth/profile`,
-            //    {
-            //        headers: {
-            //            Accept: 'application/json',
-            //            'Content-Type': 'application/json',
-            //            Authorization: `Bearer ${response.data.access_token}`
-            //        }
-            //    },)
-//
-            //if (profileresponse.status === 200) {
-            //    dispatch(userAction.Login(profileresponse.data))
-            //}
-        }
-
-    } catch (error) {
-
-
-    }
-}
-
-export const userAction = userslice.actions;
-
-export const userstates = (state: AppState) => state.user;
+export default userSlice.reducer;

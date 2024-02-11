@@ -11,7 +11,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = (props) => {
   return (
     <>
 
-      <Box className='my-page' sx={{width:"100%" ,marginBottom:"0px" ,scrollbarWidth: phone ? "none" :tablet? "none" : "3px"}}>
+      <Box className='my-page' sx={{width:"100%" ,height:"100vh",marginBottom:"0px" ,overflowY: "scroll",
+    overflowX: "hidden",scrollbarWidth: phone ? "none" :tablet? "none" : "3px"}}>
         {props.children}
         <Navbar />
       </Box>

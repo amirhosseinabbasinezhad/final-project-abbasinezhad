@@ -60,35 +60,30 @@
 .total {
     margin-top: auto;
     z-index: 5;
-    position: sticky;
-    left: 25px;
-    bottom: 25px;
+   
     color: rgb(58, 58, 58);
 }
 
 .Cartbottom {
     display: flex;
     justify-content: space-between;
-    margin-top: auto;
-    margin-bottom: 15px;
+    padding:10px 25px 0 25px ;
     position: sticky;
-    left: 20px;
-    bottom: 12px;
-    width: 350px;
+    left: 90%;
+    bottom: 88px;
     color: #fff;
-
-
+    background-color: #fff;
+z-index: 10;
 }
 
 .paynowbtn {
-
     color: #fff;
-    border-radius: 40px;
+    border-radius: 20px;
 }
 
 .paynowbtn>.paybtn {
  
-    width: 240px;
+    width: 100%;
     color: #fff;
     padding: 20px;
     border-radius: inherit;

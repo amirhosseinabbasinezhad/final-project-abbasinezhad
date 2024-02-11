@@ -1,12 +1,12 @@
 import Avatar from '@mui/material/Avatar';
 import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
 import { useSelector } from 'react-redux';
-import { userstates } from '../store/userSlice';
+import { userState } from '../store/userSlice';
 
 import IconButton from '@mui/material/IconButton';
 
 const Header: React.FC<{ text: string }> = (props) => {
-    const user = useSelector(userstates)
+    const user = useSelector(userState)
 
     return (<>
 

@@ -7,8 +7,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { useDispatch, useSelector } from "react-redux";
-import { LoginUser, userstates } from "../store/userSlice"
-
+import {  loginUserAction, userState } from "../store/userSlice"
+import { useAppDispatch } from '../store';
 const Login: React.FC = () => {
   //useref
   const Emailref = useRef<HTMLInputElement>(null);
@@ -16,14 +16,14 @@ const Login: React.FC = () => {
   //state
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   //redux
-  const user = useSelector(userstates);
-  const dispatch = useDispatch();
+  const user = useSelector(userState);
+  const dispatch = useAppDispatch();
   //router
   const router = useRouter();
   //useEffects
   useEffect(() => {
     if (user.authState === true) {
-      router.push(`/user/${user.userInfo.email}`);
+      router.push(`/user/me`);
     }
   }, [user.authState])
   //functions
@@ -51,12 +51,12 @@ const Login: React.FC = () => {
     }
 
     if (password.length >= 8 && validateEmail(email)) {
-      LoginUser(dispatch, email, password);
-      setTimeout(() => {
-        if (user.authState === false) {
-          setLoginErrors((loginErrors) => [...loginErrors, "user not found"]);
-        }
-      }, 5000);
+      dispatch(loginUserAction(email,password))
+      //setTimeout(() => {
+      //  if (user.authState === false) {
+      //    setLoginErrors((loginErrors) => [...loginErrors, "user not found"]);
+      //  }
+      //}, 15000);
 
     }
 

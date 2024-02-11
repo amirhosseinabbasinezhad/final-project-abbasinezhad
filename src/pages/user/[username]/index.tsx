@@ -4,17 +4,18 @@ import { useState, useEffect } from "react";
 import LogedIn from "../../../components/user/LogedIn";
 import { useRouter } from "next/router";
 
-import { userstates } from "../../../components/store/userSlice"
+import { userState } from "../../../components/store/userSlice"
 import { useSelector, useDispatch } from "react-redux";
 import { Login } from "@mui/icons-material";
+import { getToken } from "../../api/token";
 const UserAccount: NextPage = () => {
     const router = useRouter();
-    const user = useSelector(userstates);
+    const user = useSelector(userState);
 
     const userpath = router.query.username;
     const [validate, setValidate] = useState<boolean>(false)
     useEffect(() => {
-        if (userpath == user.userInfo.email) {
+        if (getToken()) {
             setValidate(true)
 
         }
@@ -22,7 +23,7 @@ const UserAccount: NextPage = () => {
             setValidate(false)
             router.push("/user/login");
         }
-    }, [user.userInfo.id, userpath])
+    }, [])
     return (<>
         {validate && <LogedIn />}
     </>)

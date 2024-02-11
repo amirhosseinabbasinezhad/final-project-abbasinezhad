@@ -6,8 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { categoryStates, categoryAction } from '../store/categorySlice';
-import { productAction } from '../store/productsSlice';
+//import { categoryStates, categoryAction } from '../store/categorySlice';
+//import { productAction } from '../store/productsSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -27,28 +27,24 @@ const style = {
     p: 1,
 };
 
-export default function SelectFilters() {
-    const [categoryType, setCategoryType] = useState<string>("0");
-    const [open, setOpen] = useState(false);
-    const [limit, setLimit] = useState<string>("10");
-    const showselect = useSelector(categoryStates);
+export default function SelectFilters({open ,setOpen ,setCategoryType,categoryType,limit,setLimit}:{open :boolean ,setOpen:any,setCategoryType:any,categoryType:string,limit:string,setLimit:any}) {
+
+    //const showselect = useSelector(categoryStates);
     const dispatch = useDispatch();
     const handleselects = () => {
-        dispatch(productAction.setLimit(limit));
-        dispatch(productAction.setSelects(categoryType));
-        dispatch(productAction.setPage(1));
+        //dispatch(productAction.setLimit(limit));
+        //dispatch(productAction.setSelects(categoryType));
+        //dispatch(productAction.setPage(1));
         handleClose();
 
 
     }
     const handleClose = () => {
         setOpen(false);
-        dispatch(categoryAction.showSelectHandler())
+       // dispatch(categoryAction.showSelectHandler())
 
     }
-    useEffect(() => {
-        setOpen(showselect.showSelects);
-    }, [showselect.showSelects])
+   
     return (
         <div>
 
@@ -89,11 +85,13 @@ export default function SelectFilters() {
                                         name="radio-buttons-group"
                                     >
                                         <FormControlLabel value="0" control={<Radio color="secondary" />} label="All" />
-                                        <FormControlLabel value="1" control={<Radio color="secondary" />} label="Clothes" />
-                                        <FormControlLabel value="2" control={<Radio color="secondary" />} label="Electronics" />
-                                        <FormControlLabel value="3" control={<Radio color="secondary" />} label="Furniture" />
-                                        <FormControlLabel value="4" control={<Radio color="secondary" />} label="Shoes" />
-                                        <FormControlLabel value="5" control={<Radio color="secondary" />} label="Others" />
+                                        <FormControlLabel value="men" control={<Radio color="secondary" />} label="men" />
+                                        <FormControlLabel value="women" control={<Radio color="secondary" />} label="women" />
+                                        <FormControlLabel value="set" control={<Radio color="secondary" />} label="set" />
+                                        <FormControlLabel value="jeans" control={<Radio color="secondary" />} label="jeans" />
+                                        <FormControlLabel value="kids" control={<Radio color="secondary" />} label="kids" />
+                                        <FormControlLabel value="t-shirt" control={<Radio color="secondary" />} label="t-shirt" />
+                                        <FormControlLabel value="shoes" control={<Radio color="secondary" />} label="shoes" />
                                     </RadioGroup>
                                 </FormControl>
                             </div>

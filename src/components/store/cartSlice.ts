@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from './index';
+import { addressinterface } from '../../pages/api/address';
 //import { calculateDiscountNumber } from 'utils';
 
 // Type
@@ -9,11 +10,14 @@ type cartStateType = {
     title: string;
     salePercent: number;
     price: number;
+    color:string;
+    size:string;
     img: string;
     amount: number;
   }[];
   totalAmount: number;
   totalCount: number;
+  address:any;
   //cartDrawerShow: boolean;
   //couponValue: number;
   //couponMax: number;
@@ -23,6 +27,7 @@ const initialState: cartStateType = {
   items: [],
   totalAmount: 0,
   totalCount: 0,
+  address:"not selected address",
  // cartDrawerShow: false,
  // couponValue: 0,
  // couponMax: 0,
@@ -49,6 +54,9 @@ const cartSlice = createSlice({
       );
       state.totalAmount = parseInt(totalAmount.toFixed(2));
       state.totalCount = totalCount;
+    },
+    setAddressInCart: (state,action) => {
+    state.address=action?.payload  
     },
     remove: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.item.id);
@@ -114,6 +122,8 @@ export const {
   increase,
   decrease,
   addProductToCart,
+  setAddressInCart,
+
   //changeShowCartDrawer,
   clearCart,
   //getCartItems,

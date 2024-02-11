@@ -3,12 +3,13 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import TuneIcon from '@mui/icons-material/Tune';
 import SearchIcon from '@mui/icons-material/Search';
-import { categoryAction } from '../store/categorySlice';
+//import { categoryAction } from '../store/categorySlice';
 import { useDispatch } from 'react-redux';
-const SearchBar = () => {
-    const dispatch = useDispatch();
+const SearchBar = ({open ,setOpen}:{open :boolean ,setOpen:any}) => {
+    //const dispatch = useDispatch();
     const handleshowFilter = () => {
-        dispatch(categoryAction.showSelectHandler())
+        setOpen(!open)
+    //    dispatch(categoryAction.showSelectHandler())
     }
     return (<>
         <div className="searcharea">

@@ -1,6 +1,6 @@
 import Cookie from 'js-cookie';
 
-export const tokenKey = 'token';
+export const tokenKey = 'accessToken';
 
 export function setToken(token: string) {
   Cookie.set(tokenKey, token, { expires: 7 });

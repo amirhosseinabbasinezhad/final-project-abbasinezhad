@@ -5,7 +5,7 @@ import FavoriteBorderTwoToneIcon from "@mui/icons-material/FavoriteBorderTwoTone
 import { useRouter } from "next/router";
 import React from "react";
 import Image from "next/image";
-import { Box, Card } from "@mui/material";
+import { Box, Card, useMediaQuery } from "@mui/material";
 
 const Product: React.FC<{
   _id: string;
@@ -15,6 +15,8 @@ const Product: React.FC<{
   image: string;
 }> = (props) => {
   const router = useRouter();
+  const phone = useMediaQuery("(max-width: 550px)");
+  const tablet = useMediaQuery("(max-width: 770px)");
   const singleProductHandler = (e: React.MouseEvent) => {
     console.log(props);
 
@@ -27,11 +29,12 @@ const Product: React.FC<{
         onClick={(e) => {
           singleProductHandler(e);
         }}
+        sx={{height:phone ? "300px" : tablet ? "370px" :"365px"}}
         className="product"
       >
         <Card className="maininfo row">
           <Box className="imagebox" sx={{ width: "100%" }}>
-            <img src={props.image} alt="product image" />
+            <img src={props.image} className="product-image" alt="product image" />
           </Box>
           <Box className="textproduct">
             <h5>{props?.title?.slice(0, 30)}</h5>

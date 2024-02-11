@@ -18,28 +18,28 @@ const ProductCategory = () => {
                     <img src="https://api.lorem.space/image/shoes?w=640&h=480&r=7520" alt="shoes" />
                 </div>
             </Link>
-            <Link href={"/category/clothes"}>
+            <Link href={"/category/men"}>
                 <div className="clothes">
-                    <h4>clothes</h4>
-                    <img src="https://api.lorem.space/image/fashion?w=640&h=480&r=1827" alt="clothes" />
+                    <h4>men</h4>
+                    <img src="https://api.lorem.space/image/fashion?w=640&h=480&r=1827" alt="men" />
                 </div>
             </Link>
-            <Link href={"/category/electronics"}>
+            <Link href={"/category/women"}>
                 <div className="electronics">
-                    <h4>electronics</h4>
-                    <img src="https://api.lorem.space/image/watch?w=640&h=480&r=8823" alt="electronics" />
+                    <h4>women</h4>
+                    <img src="https://api.lorem.space/image/watch?w=640&h=480&r=8823" alt="women" />
                 </div>
             </Link>
-            <Link href={"/category/furniture"}>
-                <div className="furniture">
-                    <h4>furniture</h4>
-                    <img src="https://api.lorem.space/image/furniture?w=640&h=480&r=5955" alt="furniture" />
+            <Link href={"/category/set"}>
+                <div className="set">
+                    <h4>set</h4>
+                    <img src="https://api.lorem.space/image/furniture?w=640&h=480&r=5955" alt="set" />
                 </div>
             </Link>
-            <Link href={"/category/others"}>
-                <div className="others">
-                    <h4>others</h4>
-                    <img src="https://api.lorem.space/image?w=640&h=480&r=879" alt="others" />
+            <Link href={"/category/kids"}>
+                <div className="kids">
+                    <h4>kids</h4>
+                    <img src="https://api.lorem.space/image?w=640&h=480&r=879" alt="kids" />
                 </div>
             </Link>
 

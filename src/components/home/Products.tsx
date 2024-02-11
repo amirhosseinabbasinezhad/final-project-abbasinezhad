@@ -1,6 +1,6 @@
 import Product from "./Product";
 import { useSelector } from "react-redux";
-import { productAction, productslicestate } from "../store/productsSlice";
+//import { productAction, productslicestate } from "../store/productsSlice";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import IconButton from "@mui/material/IconButton";
@@ -8,22 +8,22 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import useSWR from "swr";
 import axios from "axios";
-import { fechData } from "../store/productsSlice";
 import { Box, useMediaQuery } from "@mui/material";
-const Products = () => {
+const Products = ({limit,categoryType}:{limit:string,categoryType:string}) => {
   const phone = useMediaQuery("(max-width: 550px)");
   const tablet = useMediaQuery("(max-width: 770px)");
   //fetch products
   const fetcher = (url: string) => axios(url).then((r) => r.data);
-  const { data, error, isLoading } = useSWR(
-    `https://shop-api-backend-main.vercel.app/api/products/allInfo`,
-    fetcher
-  );
+
   //redux
   //const productsstates = useSelector(productslicestate);
   //const dispatch = useDispatch()
   //state
   const [page, setpage] = useState<number>(1);
+  const { data, error, isLoading } = useSWR(
+    `https://shop-api-backend-main.vercel.app/api/products/allInfo?limit=${limit}${categoryType!=="0" ? `&category=${categoryType}`: ""}&page=${page}`,
+    fetcher
+  );
   //useeffects
   // useEffect(() => {
   //   dispatch(productAction.setPage(page));
@@ -81,10 +81,10 @@ const Products = () => {
               : "repeat(4, 22%)",
             gridGap: phone ? "10%" : tablet ? "5%" : "3%",
             width: "100%",
+            mb:phone ? "250px" :"50px"
           }}
         >
           {productShow}
-          
         </Box>
         <Box
           className="row bottompaging"

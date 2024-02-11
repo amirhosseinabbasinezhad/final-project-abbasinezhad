@@ -10,9 +10,11 @@ import { Button, IconButton } from "@mui/material";
 import { useRouter } from "next/router";
 
 import { useDispatch, useSelector } from "react-redux";
-//import { userstates, carthandler } from "../store/userSlice";
+//import { userState, carthandler } from "../store/userSlice";
 import { cartState, decrease, increase } from "../store/cartSlice";
 import { addProductToCart } from "../store/cartSlice";
+import ColorSelector from "./ColorSelector";
+import SizeSelector from "./SizeSelector";
 
 const SingleProduct: React.FC<{ pid: string | string[] | undefined }> = ({
   pid,
@@ -23,10 +25,12 @@ const SingleProduct: React.FC<{ pid: string | string[] | undefined }> = ({
     `https://shop-api-backend-main.vercel.app/api/products/info/${pid}`,
     fetcher
   );
+  const [selectedColor, setSelectedColor] = useState(data?.color?.[0]);
+  const [selectedSize ,setSelectedSize]=useState(data?.size?.[0])
   const dispatch = useDispatch();
   const cartInfo = useSelector(cartState);
   const handleAddToCart = () => {
-    dispatch(addProductToCart({ item: { id: data._id, amount: 1, ...data } }));
+    dispatch(addProductToCart({ item: { ...data ,id: data._id, amount: 1,color:selectedColor||data?.color?.[0] ,size:selectedSize||data?.size?.[0]  } }));
   };
 
   const handlePlusCart = () => {
@@ -46,19 +50,27 @@ const SingleProduct: React.FC<{ pid: string | string[] | undefined }> = ({
         <CircularProgress sx={{ margin: "auto" }} color="secondary" />
       ) : (
         <Box className="singleproduct" sx={{padding:phone ? "0" :"25px" ,display:"flex" ,flexDirection:phone ? "column" : "row"}}>
-          <Box className="imageproduct" sx={{ width: phone ? "100%" : "40%" }}>
+          <Box className="imageproduct" sx={{ width: phone ? "70%" : "40%",mx:phone ?"auto":"5px" }}>
             <img src={data.img} alt="products image" />
           </Box>
+          <Box>
           <Box className="pinfo row ">
             <h4>{data.title}</h4>
-            <h4>${data.price}</h4>
+            <h4> ${data.price}</h4>
           </Box>
           <Box className="description">
             <h5>{data.desc}</h5>
           </Box>
+          <Box sx={{    marginX:"20px"}}>
+            <ColorSelector colors={data?.color} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+            <SizeSelector sizes={data?.size} selectedSize={selectedSize} setSelectedSize={setSelectedSize}/>
+        
+          </Box>
+          
+          </Box>
           <Box
             className="productbottom"
-            sx={{ position: "sticky", left:phone? "10px":"70%", bottom:phone? "20vh" :"25vh"}}
+            sx={{ position: "sticky", left:phone? "10px":"70%", bottom:phone? "1vh" :"5vh"}}
           >
             {findItemInCart !== -1 ? (
               <Box

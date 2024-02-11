@@ -4,19 +4,22 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeIcon from "@mui/icons-material/Home";
 import Button from "@mui/material/Button";
 import Link from "next/link";
-import { userstates, carthandler } from "../store/userSlice";
-import { productslicestate } from "../store/productsSlice";
+import { userState } from "../store/userSlice";
+//import { productslicestate } from "../store/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { Box, IconButton, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import { cartState } from "../store/cartSlice";
+import { cartState, clearCart } from "../store/cartSlice";
+import { toast } from "react-toastify";
+import { sendOrder } from "../../pages/api/order";
+import { useAppDispatch } from "../store";
 const Navbar = () => {
-  const dispatch = useDispatch();
-  const user = useSelector(userstates);
+  const dispatch = useAppDispatch();
+  const cart = useSelector(cartState);
 
   const cartInfo = useSelector(cartState);
-  const curentproduct = useSelector(productslicestate);
+  // const curentproduct = useSelector(productslicestate);
   const [showNav, setShowNav] = useState(true);
   const [showPayBTN, setShowPayBTN] = useState(false);
   const router = useRouter();
@@ -24,12 +27,6 @@ const Navbar = () => {
   const phone = useMediaQuery("(max-width: 550px)");
   const tablet = useMediaQuery("(max-width: 770px)");
 
-  const handleAddToCart = () => {
-    const cartArray = user.cart;
-    carthandler(dispatch, curentproduct.product, user.cart, 1);
-
-    curentproduct.product;
-  };
   useEffect(() => {
     if (router.pathname.includes("products/")) {
       setShowPayBTN(false);
@@ -43,39 +40,59 @@ const Navbar = () => {
     }
   }, [router.pathname]);
 
-  const HandlePayNow = () => {
-    if (user.authState === true) {
-      if (user.cart.items.length > 0) {
-        //edame dare ...
+  const HandlePayNow = async () => {
+    if (cart?.totalCount > 0) {
+      if (cart?.address?.street) {
+        const orderData = {
+          userID: localStorage?.getItem("userId"),
+          type: "cart",
+          products: cart?.items?.map((item) => {
+            return {
+              title: item?.title,
+              img: item?.img,
+              price: item?.price,
+              productID: item?.id,
+              quantity: item?.amount,
+              size: item?.size,
+              color: item?.color,
+            };
+          }),
+          price: cart?.totalAmount,
+          userInfo: {
+            address: cart?.address,
+            name: localStorage?.getItem("name"),
+            email: localStorage?.getItem("email"),
+          },
+          order: {},
+          paymentStatus: true,
+        };
+        if (
+          orderData.userID &&
+          orderData.userInfo.name &&
+          orderData.userInfo.email
+        ) {
+          try {
+            const response = await sendOrder(orderData);
+            const data = await response;
+            toast.success(`ordered successfully ...}`);
+            dispatch(clearCart())
+            //console.log(data); 
+          } catch (error) {
+            toast.error(`error:${error}`)
+            //console.error("Error:", error); // Handle any errors that occurred during the fetch
+          }
+      } else {
+        toast.error("address doesnot exist !");
+       
+        }
       }
     }
+    else{
+      
+      toast.error("cart is empty");
+    }
   };
-  const showProductHandler = () => {
-    return (
-      <>
-        <div className="productbottom">
-          <Button
-            onClick={handleAddToCart}
-            color="secondary"
-            className="Buybtnproduct"
-            variant="contained"
-          >
-            Buy Now
-          </Button>
-          <div className="btnpcart">
-            <IconButton
-              onClick={(e) => {
-                router.push("/cart");
-              }}
-              sx={{ p: "15px" }}
-            >
-              <ShoppingCartOutlinedIcon color="secondary" />
-            </IconButton>
-          </div>
-        </div>
-      </>
-    );
-  };
+
   const navColorHandler = () => {
     const url = router.pathname;
     return (
@@ -84,13 +101,14 @@ const Navbar = () => {
           className="navbar"
           sx={{
             position: "fixed",
-            bottom: "20px",
-            display: phone ?"flex" : 'none',
-
-            justifyContent: "space-between",
+            bottom: "15px",
+            display: phone ? "flex" : "none",
+            
+            
+            justifyContent: "space-around",
             width: "100%",
           }}
-          style={{ marginTop: `${showPayBTN ? "5px" : "auto"}` }}
+          style={{  marginTop: `${showPayBTN ? "5px" : "auto"}` }}
         >
           <Link href={"/home"}>
             <HomeIcon
@@ -117,24 +135,34 @@ const Navbar = () => {
     );
   };
 
-  const BottomCart = () => {
+  const BottomCart: any = () => {
     return (
       <>
-        <div className="Cartbottom">
-          <div className="total">
+        <Box
+          className="Cartbottom"
+          sx={{
+            width: phone ? "100%" : "30%",
+            borderRadius: phone ? "0" : tablet ? "8px" : "8px",
+
+            borderBottom: phone ? "1px solid #cdcccc" : "none",
+            marginTop: "auto",
+          }}
+        >
+          <Box className="total">
             <h3>${cartInfo?.totalAmount}</h3>
-          </div>
-          <div className="paynowbtn">
+          </Box>
+          <Box className="paynowbtn " sx={{ width: "45%" }}>
             <Button
               onClick={HandlePayNow}
               color="secondary"
               className="paybtn"
+              sx={{ maxHeight: phone ? "55px" : "iherit" }}
               variant="contained"
             >
-              Pay Now
+              confirm 
             </Button>
-          </div>
-        </div>
+          </Box>
+        </Box>
       </>
     );
   };
