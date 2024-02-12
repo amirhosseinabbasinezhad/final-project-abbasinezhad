@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { userState } from '../store/userSlice';
 
 import IconButton from '@mui/material/IconButton';
+import SwipeableTemporaryDrawer from './Drawer';
 
 const Header: React.FC<{ text: string }> = (props) => {
     const user = useSelector(userState)
@@ -11,11 +12,9 @@ const Header: React.FC<{ text: string }> = (props) => {
     return (<>
 
         <div className="header_homepage">
-            <div className="menubtn">
-                <IconButton sx={{ p: '10px' }} aria-label="menu" >
-                    <WidgetsRoundedIcon color="secondary" />
-                </IconButton>
-            </div>
+           
+                <SwipeableTemporaryDrawer />
+            
 
             {props.text === "name" && <div className="nametext"> <h4>Hellow your name</h4><h5>Tehran.IRAN</h5></div>}
             {props.text === "cart" && <div className="nametext"> <h4>cart</h4></div>}

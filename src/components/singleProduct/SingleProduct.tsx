@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import axios from "axios";
-import { Badge, Box, CircularProgress, useMediaQuery } from "@mui/material";
+import { Badge, Box, CircularProgress, Rating, useMediaQuery } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
@@ -15,6 +15,8 @@ import { cartState, decrease, increase } from "../store/cartSlice";
 import { addProductToCart } from "../store/cartSlice";
 import ColorSelector from "./ColorSelector";
 import SizeSelector from "./SizeSelector";
+import Header from "../home/Header";
+import { toast } from "react-toastify";
 
 const SingleProduct: React.FC<{ pid: string | string[] | undefined }> = ({
   pid,
@@ -30,7 +32,7 @@ const SingleProduct: React.FC<{ pid: string | string[] | undefined }> = ({
   const dispatch = useDispatch();
   const cartInfo = useSelector(cartState);
   const handleAddToCart = () => {
-    dispatch(addProductToCart({ item: { ...data ,id: data._id, amount: 1,color:selectedColor||data?.color?.[0] ,size:selectedSize||data?.size?.[0]  } }));
+    dispatch(addProductToCart({ item: { ...data ,id: data?._id, amount: 1,color:selectedColor||data?.color?.[0] ,size:selectedSize||data?.size?.[0]  } }));
   };
 
   const handlePlusCart = () => {
@@ -46,20 +48,23 @@ const SingleProduct: React.FC<{ pid: string | string[] | undefined }> = ({
   const tablet = useMediaQuery("(max-width: 770px)");
   return (
     <>
+    <Box sx={{padding:"8px"}}><Header text="name"/></Box>
       {isLoading ? (
         <CircularProgress sx={{ margin: "auto" }} color="secondary" />
       ) : (
         <Box className="singleproduct" sx={{padding:phone ? "0" :"25px" ,display:"flex" ,flexDirection:phone ? "column" : "row"}}>
           <Box className="imageproduct" sx={{ width: phone ? "70%" : "40%",mx:phone ?"auto":"5px" }}>
-            <img src={data.img} alt="products image" />
+            <img src={data?.img} alt="products image" />
           </Box>
           <Box>
+             <h5 style={{marginTop:"15px"}} onClick={()=>{toast?.error("you must buy first !")}}><Rating name="read-only" value={data?.ratingsAverage} readOnly />({data?.ratingsQuantity})</h5>
           <Box className="pinfo row ">
-            <h4>{data.title}</h4>
-            <h4> ${data.price}</h4>
+            <h4>{data?.title}</h4>
+            <h4> ${data?.price}</h4>
+           
           </Box>
           <Box className="description">
-            <h5>{data.desc}</h5>
+            <h5>{data?.desc}</h5>
           </Box>
           <Box sx={{    marginX:"20px"}}>
             <ColorSelector colors={data?.color} selectedColor={selectedColor} setSelectedColor={setSelectedColor} />

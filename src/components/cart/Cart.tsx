@@ -51,7 +51,6 @@ const Cart: React.FC = () => {
             md={12}
             lg={6}
             className="Address"
-            sx={{ display: phone ? "none" : "block" }}
           >
             <AddressForm />
           </Grid>

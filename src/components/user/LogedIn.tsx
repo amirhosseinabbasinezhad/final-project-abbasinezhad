@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useAppDispatch } from "../store";
 import OrdersComponent from "./OrdersShow";
 import { Grid } from "@mui/material";
+import Header from "../home/Header";
 const LogedIn: React.FC = () => {
   const user = useSelector(userState);
   const dispatch = useAppDispatch();
@@ -22,6 +23,7 @@ const LogedIn: React.FC = () => {
   return (
     <>
       <div style={{ padding: "20px 20px 5px 20px" }}>
+      <Header text="name"/>
         <Button
           onClick={(e) => {
             LogoutHandler(e);
@@ -32,14 +34,7 @@ const LogedIn: React.FC = () => {
         >
           <LogoutRoundedIcon className="logoutbtn" />
         </Button>
-        <div className="userpage">
-          <h4>{user.userInfo.email}</h4>
-          <Avatar
-            alt="Travis Howard"
-            src={user.userInfo.avatar}
-            sx={{ width: 80, height: 80 }}
-          />
-        </div>
+        
         <div className="cartinaccunt">
           <Grid container spacing={2}>
             <Grid item xs={12} md={12} lg={6}>

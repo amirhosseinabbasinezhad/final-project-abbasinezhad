@@ -15,13 +15,12 @@ const Home = () => {
         <div style={{ padding: "20px 20px 5px 20px" }} className="homepage">
             <SelectFilters open={open} setOpen={setOpen} limit={limit} setLimit={setLimit} categoryType={categoryType} setCategoryType={setCategoryType}/>
             <Header text="name"/>
-            <div className="searchbar">
+            <div className="">
                 <SearchBar open={open} setOpen={setOpen}/>
 
             </div>
             <Slider />
 
-            <FilterProductsSlider />
             <Products limit={limit} categoryType={categoryType}/>
 
 
