@@ -69,7 +69,7 @@ const Products = ({limit,categoryType}:{limit:string,categoryType:string}) => {
   );
   return (
     <>
-      <Box >
+      <Box sx={{marginTop:"10px"}}>
         <Box
           className="products"
           sx={{

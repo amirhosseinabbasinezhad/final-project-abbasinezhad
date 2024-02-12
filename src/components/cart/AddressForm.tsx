@@ -52,7 +52,7 @@ const AddressForm: React.FC = () => {
                 </Select>
                 </Card>
             </FormControl>
-            <Button onClick={handleAddAddressClick}disabled={address2?.ok} startIcon={<AddIcon />}  style={{ backgroundColor: "inherit",border:"1px solid #F79DA5", color: "#F79DA5" }}>Add New Address</Button>
+          
             {showAddAddressForm && (
                 <form onSubmit={handleSubmit}>
                     <TextField

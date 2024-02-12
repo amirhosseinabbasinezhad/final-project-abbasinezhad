@@ -37,9 +37,7 @@ const Cart: React.FC = () => {
           container
           spacing={2}
           sx={{
-            display: "flex",
-            flexDirection: phone ? "column" : "row",
-            justifyContent: "space-evenly",
+           
           }}
         >
           <Grid item xs={12} md={12} lg={6} className="cartitems ">

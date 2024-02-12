@@ -16,7 +16,7 @@ const Header: React.FC<{ text: string }> = (props) => {
                 <SwipeableTemporaryDrawer />
             
 
-            {props.text === "name" && <div className="nametext"> <h4>Hellow your name</h4><h5>Tehran.IRAN</h5></div>}
+            {props.text === "name" && <div className="nametext"> <h4>Hellow </h4><h5>Tehran.IRAN</h5></div>}
             {props.text === "cart" && <div className="nametext"> <h4>cart</h4></div>}
             <div className="imageframe">
                 <Avatar alt="Travis Howard" src={"https://gravatar.com/avatar/76c59da51a4dc4f3f32c1b72824c7a3a?s=400&d=robohash&r=x"} />
